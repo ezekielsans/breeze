@@ -2,10 +2,12 @@
 
 namespace App\Http\Requests\Auth;
 
+use App\Models\User;
 use Illuminate\Auth\Events\Lockout;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 
@@ -41,24 +43,29 @@ class LoginRequest extends FormRequest
     {
         $this->ensureIsNotRateLimited();
 
+        $isUserDeactivated = User::withTrashed()
+            ->whereEmail($this->string('email'))
+            ->exists();
 
-               //set deleted_at to null , to reactivate account
-               $isUserDeactivated = User::withTrashed()
-               ->whereEmail($this->string('email'))
-               ->restore();
-           // $user->deleted_at = null;
-           // $user->save();
-   
-           if ($isUserDeactivated) {
-               Session::flash('is_deactivated', true)
-               throw ValidationException::withMessages([
-                   'email' => 'your account is deactivated',
-               ]);
-   
-           }
-   
+        if ($isUserDeactivated) {
+            Session::flash('is_deactivated', true);
 
-        if (! Auth::attempt($this->only('email', 'password'), $this->boolean('remember'))) {
+            throw ValidationException::withMessages([
+                'email' => 'Your account is deactivated.',
+            ]);
+        }
+
+        // User::withTrashed()
+        //     ->whereEmail($this->string('email'))
+        //     ->restore();
+
+        // if ($user) {
+        //     $user->restore();
+        //     // $user->deleted_at = null;
+        //     // $user->save();
+        // }
+
+        if (!Auth::attempt($this->only('email', 'password'), $this->boolean('remember'))) {
             RateLimiter::hit($this->throttleKey());
 
             throw ValidationException::withMessages([
@@ -76,7 +83,7 @@ class LoginRequest extends FormRequest
      */
     public function ensureIsNotRateLimited(): void
     {
-        if (! RateLimiter::tooManyAttempts($this->throttleKey(), 5)) {
+        if (!RateLimiter::tooManyAttempts($this->throttleKey(), 5)) {
             return;
         }
 
@@ -97,6 +104,6 @@ class LoginRequest extends FormRequest
      */
     public function throttleKey(): string
     {
-        return Str::transliterate(Str::lower($this->string('email')).'|'.$this->ip());
+        return Str::transliterate(Str::lower($this->string('email')) . '|' . $this->ip());
     }
 }
