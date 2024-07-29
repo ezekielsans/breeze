@@ -95,3 +95,11 @@ cron job -> scheduled automation
 
 --make:job
 --make:command
+
+---
+
+Business Layer - Controller -> Business
+Repository Pattern -> Query Changes
+
+Service Repository Pattern
+Middleware is like a firewall
