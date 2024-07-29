@@ -25,6 +25,14 @@ Route::prefix('/posts')->name('posts.')->group(function () {
     Route::post('/store', [PostController::class, 'store'])
         ->name('store');
 
+    Route::post('/{post}', [PostController::class, 'store'])
+        ->name('show');
+
+    Route::post('/{post}/edit', [PostController::class, 'edit'])
+        ->name('edit');
+
+    Route::put('/{post}/update', [PostController::class, 'update'])
+        ->name('update');
 });
 
 require __DIR__ . '/auth.php';

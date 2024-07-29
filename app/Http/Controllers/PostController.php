@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Post\StoreRequest;
+
 class PostController extends Controller
 {
     /**
@@ -15,11 +17,10 @@ class PostController extends Controller
 //return
         return view('posts.create');
     }
-    public function store()
+    public function store(StoreRequest $request)
     {
 
 //return
-        dd("hello");
 
     }
 }
