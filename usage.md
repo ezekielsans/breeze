@@ -102,4 +102,7 @@ Business Layer - Controller -> Business
 Repository Pattern -> Query Changes
 
 Service Repository Pattern
-Middleware is like a firewall
+Middleware is like a firewall -> for all endpoints
+Auth -> for users / policies
+
+UPLOADING -> Filename not blob
