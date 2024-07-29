@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -19,7 +19,11 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::prefix('/posts')->name('posts.')->group(function () {
-    Route::get('/create', [AuthenticatedSessionController::class, 'store'])->name('post.store');
+    Route::get('/create', [PostController::class, 'create'])
+        ->name('create');
+
+    Route::post('/store', [PostController::class, 'store'])
+        ->name('store');
 
 });
 

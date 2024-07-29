@@ -15,7 +15,12 @@ export default {
                 sans: ["Figtree", ...defaultTheme.fontFamily.sans],
             },
         },
+
+        light: {
+            primary: "#000",
+        },
     },
+    darkMode: "class",
 
     plugins: [forms, require("@tailwindcss/forms")],
 };

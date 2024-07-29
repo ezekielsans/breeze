@@ -13,6 +13,13 @@ class PostController extends Controller
     {
 
 //return
+        return view('posts.create');
+    }
+    public function store()
+    {
+
+//return
+        dd("hello");
 
     }
 }
